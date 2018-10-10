@@ -9,7 +9,8 @@ class Caller:
             2 : self.mul,
             3 : self.div,
             4 : self.factorial,
-            5 : self.fibonacci
+            5 : self.fibonacci,
+            6 : self.foo
         }
 
     def add (self, x, y):
@@ -29,3 +30,6 @@ class Caller:
 
     def fibonacci (self, n):
         return self.server.fibonacci (n)
+    
+    def foo (self):
+        return self.server.foo ()

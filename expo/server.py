@@ -28,9 +28,16 @@ def factorial_function (n):
         return n * factorial_function (n - 1)
 
 def fibonacci_function (n):
+    if n == 0:
+        return 0
+    if n == 1 or n  == 2:
+        return 1
+    return fibonacci_function (n - 1) + fibonacci_function (n - 2)
+
+def foo_function ():
     for i in range (99999999):
         pass
-    return 1
+    return 0
 
 s.register_function (add_function, 'add')
 s.register_function (dec_function, 'dec')
@@ -38,6 +45,7 @@ s.register_function (mul_function, 'mul')
 s.register_function (div_function, 'div')
 s.register_function (factorial_function, 'factorial')
 s.register_function (fibonacci_function, 'fibonacci')
+s.register_function (foo_function, 'foo')
 
 s.serve_forever ()
 

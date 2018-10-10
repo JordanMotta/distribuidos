@@ -18,7 +18,7 @@ class GUI:
         lbl1.place(x=70, y=100)
 
         self.combo = Combobox(self.window)
-        self.combo['values']= ("Suma","Resta","Multiplicacion","División","Factorial","Fibonacci")
+        self.combo['values']= ("Suma","Resta","Multiplicacion","División","Factorial","Fibonacci", "foo")
         self.combo.current(0) #set the selected ite,
         self.combo.place(x=180, y=100)
 
@@ -57,7 +57,9 @@ class GUI:
 
         c = self.combo.current ()
         r = 0
-        if c > 3:
+        if c == 6:
+            r = self.call.methods[c]()
+        elif c > 3:
             r = self.call.methods[c](int (parameters[0]))
         else:
             r = self.call.methods[c](int(parameters[0]), int(parameters[1]))
