@@ -4,6 +4,6 @@ if __name__ == "__main__":
     c = cluster.cluster()
 
     if c.is_main ():
-        c.run ()
+        c.run_main ()
     else:
-        c.process_data ()
+        c.run_second ()
