@@ -1,0 +1,8 @@
+#Data structure to be returned by nodes
+# {
+    # countries : {country name : number},
+    # cities : {city name : number},
+    # ips : {ip : number},
+    # hours : {hour : number},
+    # emails : {email : number}
+# }
