@@ -1,15 +1,18 @@
 import logs_generator
 from mpi4py import MPI
 import node
+
 # main interface beetwen main computer and nodes.
 
 #Data structure to be returned by nodes
 # {
+
     # countries : {country name, number},
     # cities : {city name, number},
     # ips : {ip, number},
     # hours : {hour, number},
     # emails : {email, number}
+
 # }
 
 # NOTE: The data must be sorted in main computer.
@@ -24,6 +27,7 @@ class cluster:
 
     def is_main (self):
         return self.id == self.MAIN_NODE
+
     
     def is_node (self):
         return False
@@ -61,15 +65,16 @@ class cluster:
         #         if self.is_idle (node_id):
         #             fake_logs = lg.gen (1000)
         #             self.send_data_to_node (node_id, fake_logs)
+
     
     def is_idle (self, p_node_id):
         return False
 
     #for nodes use.
-    def run_second (self):
-        
+    def run_second (self):      
         data = MPI.COMM_WORLD.recv (source=self.MAIN_NODE)
         print ("data: ", len (data))
         new_data = self.snode.process_data (data)
         # MPI.COMM_WORLD.send (new_data, self.MAIN_NODE)
+
     

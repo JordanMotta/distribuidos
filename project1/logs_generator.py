@@ -81,3 +81,4 @@ class LogsGenerator:
                     salida= salida+user_final+resultado
                     logs.append (salida)
         return logs
+
