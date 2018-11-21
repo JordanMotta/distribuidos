@@ -1,5 +1,6 @@
 import logs_generator
 from mpi4py import MPI
+import operator
 import node
 
 # main interface beetwen main computer and nodes.
@@ -58,23 +59,61 @@ class cluster:
             self.send_data_to_node (n, logs[index : index + batch - 1])
             index += batch
 
-        # Here i simulate a lot of logs
-        # lg = logs_generator.LogsGenerator ()
-        # while True:
-        #     for node_id in range (self.nodes):
-        #         if self.is_idle (node_id):
-        #             fake_logs = lg.gen (1000)
-        #             self.send_data_to_node (node_id, fake_logs)
+
+        data = {
+            'countries' : {},
+            'cities' : {},
+            'ips' : {},
+            'emails' : {},
+            'hours' : {}
+        }
+
+        for n in range (1, self.nodes):
+            dp = MPI.COMM_WORLD.recv (source=n)
+            print ("received from : ", n)
+            self.add (data['countries'], dp['countries'])
+            self.add (data['cities'], dp['cities'])
+            self.add (data['ips'], dp['ips'])
+            self.add (data['emails'], dp['emails'])
+            self.add (data['hours'], dp['hours'])
+            print ('added')
+        
+        # print (data)
+        # print ('-----------------------------')
+        ordered_countries = sorted (data['countries'].items (), key=operator.itemgetter (1), reverse=True)
+        ordered_cities = sorted (data['cities'].items (), key=operator.itemgetter (1), reverse=True)
+        ordered_ips = sorted (data['ips'].items (), key=operator.itemgetter (1), reverse=True)
+        ordered_emails = sorted (data['emails'].items (), key=operator.itemgetter (1), reverse=True)
+        ordered_hours = sorted (data['hours'].items (), key=operator.itemgetter (1), reverse=True)
+        print (ordered_countries)
+        print ('------------------------------')
+        print (ordered_cities)
+        print ('------------------------------')
+        print (ordered_ips)
+        print ('------------------------------')
+        print (ordered_emails)
+        print ('------------------------------')
+        print (ordered_hours)
 
     
     def is_idle (self, p_node_id):
         return False
+
+    def add (self, p_acc, p_data_rocessed):
+        dp = p_data_rocessed
+        for k, v in dp.items ():
+            try:
+                p_acc[k] += v
+            except KeyError as e:
+                p_acc[k] = v
 
     #for nodes use.
     def run_second (self):      
         data = MPI.COMM_WORLD.recv (source=self.MAIN_NODE)
         print ("data: ", len (data))
         new_data = self.snode.process_data (data)
-        # MPI.COMM_WORLD.send (new_data, self.MAIN_NODE)
-
+        MPI.COMM_WORLD.send (new_data, self.MAIN_NODE)
     
+    def sort_data (self, p_data):
+        for d in p_data:
+            d.sort ()
