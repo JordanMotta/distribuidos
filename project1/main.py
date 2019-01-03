@@ -1,3 +1,4 @@
+#!/usr/env/bin python3
 import cluster
 
 if __name__ == "__main__":

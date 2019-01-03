@@ -1,6 +1,8 @@
+#!/usr/env/bin python3
 import re
 import mpi4py
 import geoip2.database
+import time
 
 
 class Node:
@@ -9,7 +11,8 @@ class Node:
         self.geo = geoip2.database.Reader ('GeoLite2-City.mmdb')
     
     def process_data(self, p_logs):
-        print ('logs len: ' + str(len (p_logs)))
+        start_time = time.time ()
+        # print ('logs len: ' + str(len (p_logs)))
         processed_data = {
             'countries' : {},
             'cities' : {},
@@ -19,14 +22,15 @@ class Node:
         }
 
         for l in p_logs:
-            pl = self.process_log (l)
-            self.add_item (processed_data['countries'], pl, 'country')
-            self.add_item (processed_data['cities'], pl, 'city')
-            self.add_item (processed_data['ips'], pl, 'ip')
-            self.add_item (processed_data['emails'], pl, 'email')
-            self.add_item (processed_data['hours'], pl, 'hour')
-        # print (processed_data)
-        print ("node ", self.id, " ready!")
+            if l.find ('WARN') != -1:
+                pl = self.process_log (l)
+                self.add_item (processed_data['countries'], pl, 'country')
+                self.add_item (processed_data['cities'], pl, 'city')
+                self.add_item (processed_data['ips'], pl, 'ip')
+                self.add_item (processed_data['emails'], pl, 'email')
+                self.add_item (processed_data['hours'], pl, 'hour')
+        elapsed_time = time.time () - start_time
+        print ("Node ", self.id, " lasted ", elapsed_time, " seconds")
         return processed_data
 
     def add_item (self, p_dict, p_value, p_key):
@@ -56,7 +60,7 @@ class Node:
                 pass
             else:
                 data['country'] = r.country.name
-                data['city'] = r.city.name
+                data['city'] = r.city.name if r.city.name != None else 'None'
                 data['ip'] = ips.group (1)
 
         # print (emails.groups ())

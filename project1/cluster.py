@@ -1,3 +1,5 @@
+#!/usr/env/bin python3
+import os
 import logs_generator
 from mpi4py import MPI
 import operator
@@ -40,7 +42,9 @@ class cluster:
     
     #run method collect the data to be send to nodes.
     def run_main (self):
-        filenames = ['log2', 'log3', 'log4']
+        average = 60
+        filenames = self.get_files ()
+        print (filenames)
         f = None
         logs = []
         for fn in filenames:
@@ -50,15 +54,18 @@ class cluster:
 
         print ("cluster logs len: ", len (logs))
         self.nodes = self.size
-        # remain = len (logs) % nodes - 1
-        # batchs = []
         batch = int (len (logs) / (self.nodes - 1))
+        mod = len (logs) % (self.nodes - 1)
         index = 0
-        for n in range (1, self.nodes):
-            print ("node: ", n)
-            self.send_data_to_node (n, logs[index : index + batch - 1])
+        batches = []
+        for _ in range (1, self.nodes):
+            batches.append(logs[index : index + batch])
             index += batch
+        batches[0] += logs[index : index + mod]
 
+        for n in range (1, self.nodes):
+            # print ("node: ", n)
+            self.send_data_to_node (n, batches[n - 1])
 
         data = {
             'countries' : {},
@@ -77,38 +84,74 @@ class cluster:
             self.add (data['emails'], dp['emails'])
             self.add (data['hours'], dp['hours'])
             print ('added')
-        
-        # print (data)
+
+
         # print ('-----------------------------')
         ordered_countries = sorted (data['countries'].items (), key=operator.itemgetter (1), reverse=True)
         ordered_cities = sorted (data['cities'].items (), key=operator.itemgetter (1), reverse=True)
         ordered_ips = sorted (data['ips'].items (), key=operator.itemgetter (1), reverse=True)
         ordered_emails = sorted (data['emails'].items (), key=operator.itemgetter (1), reverse=True)
         ordered_hours = sorted (data['hours'].items (), key=operator.itemgetter (1), reverse=True)
-        print (ordered_countries)
+        print ("###################################################")
+        print ("####################    TOP 20   ##################")
+        print ("###################################################")
+        print ("Top 20 de países")
+        print (ordered_countries[0 : 20])
         print ('------------------------------')
-        print (ordered_cities)
+        print ("Top 20 de ciudades")
+        print (ordered_cities[0 : 20])
         print ('------------------------------')
-        print (ordered_ips)
+        print ("Top 20 de IP's")
+        print (ordered_ips[0 : 20])
         print ('------------------------------')
-        print (ordered_emails)
+        print ("Top 20 de correos")
+        print (ordered_emails[0 : 20])
         print ('------------------------------')
-        print (ordered_hours)
+        print ("Top 20 de horas")
+        print (ordered_hours[0 : 20])
+
+        print ('------------------------------------------------------------------------------------------------------')
+        print ('######################################################################################################')
+        print ('Average attacks for countries')
+        print (self.get_average (ordered_countries[0:20], average))
+        print ('Average attacks for cities')
+        print (self.get_average (ordered_cities[0:20], average))
+        print ('Average attacks for ips')
+        print (self.get_average (ordered_ips[0:20], average))
+        print ('Average attacks for emails')
+        print (self.get_average (ordered_emails[0:20], average))
+
 
     
+    def get_files (self):
+        path = 'samples/'
+        files = [f for f in os.listdir (path) if os.path.isfile ( os.path.join (path, f))]
+        return files
+
     def is_idle (self, p_node_id):
         return False
 
+    def get_average (self, p_top, p_x):
+        at = []
+        for t in p_top:
+            l = list(t)
+            l[1] /= p_x
+            at.append (tuple (l))
+        return at
+
     def add (self, p_acc, p_data_rocessed):
+        total = 0
         dp = p_data_rocessed
         for k, v in dp.items ():
+            total += v
             try:
                 p_acc[k] += v
             except KeyError as e:
                 p_acc[k] = v
+        # print ('total: ', total)
 
     #for nodes use.
-    def run_second (self):      
+    def run_second (self):
         data = MPI.COMM_WORLD.recv (source=self.MAIN_NODE)
         print ("data: ", len (data))
         new_data = self.snode.process_data (data)
