@@ -3,6 +3,9 @@ import java.io.IOException;
 import java.lang.Runnable;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.List;
+import java.io.InputStream;
 
 class Server
 {
@@ -46,7 +49,15 @@ class Server
                 {
                     try
                     {
-                        conn.acceptRequest();
+                        Socket newConnection = conn.acceptRequest();
+                        InputStream in = newConnection.getInputStream();
+                        while (in.available () == 0 );
+
+                        List<Byte> msg = Connection.retrieveMessage (in);
+                        if (msg.get(0) == Connection.SAVE_FILE)
+                        {
+                            saveFile (msg);
+                        }
                     }
                     catch (IOException e)
                     {
@@ -67,7 +78,13 @@ class Server
                     {
                         if (conn.isMessageAvailable())
                         {
-                            processMessage ();
+                            System.out.println ("Back message available");
+                            processMessage (conn.receive());
+                        }
+                        if (conn.isFrontMessageAvailable())
+                        {
+                            System.out.println ("Front message available");
+                            processMessage(conn.frontReceive());
                         }
                     }
                     catch (IOException e)
@@ -77,11 +94,24 @@ class Server
                 }
             }
         });
+
+        receiveMessageThread.start ();
     }
 
-    private void processMessage ()
+    private void saveFile (List<Byte> msg)
     {
 
+    }
+
+    private void processMessage (final List<Byte> msg)
+    {
+        System.out.println ("Message received!");
+        if (msg.get(0) == Server.JOIN)
+        {
+            System.out.println ("A server wants to join");
+            System.out.println ("Port length: " + (int)msg.get (1));
+            System.out.println ("Port: " + Main.bytesToString(msg.subList(2, msg.size())));
+        }
     }
 
     public void close ()

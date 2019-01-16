@@ -5,6 +5,7 @@
 
 import java.io.*;
 import java.net.Socket;
+import java.net.InetAddress;
 import java.util.*;
 import java.util.logging.*;
 
@@ -26,7 +27,7 @@ public class Client
         // Creamos un socket en el lado cliente
         //Se conecta a partir del puerto 3000
 
-        try{ socketCliente = new Socket(hostName, 3000);
+        try{ socketCliente = new Socket(hostName, 50010);
             System.out.println("servidor conectado:" + hostName);
 
             //Obtenemos el canal de salida

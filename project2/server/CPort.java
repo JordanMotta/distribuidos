@@ -46,6 +46,7 @@ class CPort extends Connection
         }
         else // There are some ports to use.
         {
+            System.out.println ("I am not the first server :(");
             join (availablePorts.get(Math.abs(new Random().nextInt()) % availablePorts.size()));
             
         }
@@ -109,10 +110,13 @@ class CPort extends Connection
             else
             {
                 //Ask to join to one server.
+                System.out.println ("Joining to server " + port);
                 frontServer = new Socket ("localhost", Integer.parseInt (
                     usedPorts.get( 
                         Math.abs (
                             new Random().nextInt()) % usedPorts.size ())));
+
+                System.out.println ("Joined to server " + port);
                 
                 // ArrayList<Byte> message = new ArrayList<>();
                 // message.add(new Byte(Server.JOIN));
@@ -120,13 +124,14 @@ class CPort extends Connection
                 //     Arrays.asList(
                 //         BigInteger.valueOf(
                 //             socket.getLocalPort()).toByteArray()));
+                
 
-                String strMessage = String.valueOf(Server.JOIN) + String.valueOf(socket.getLocalPort());
+                // String strMessage = String.valueOf(Server.JOIN) + String.valueOf(socket.getLocalPort());
                 
                 
-                OutputStream out = socket.getOutputStream();
-                out.write(strMessage.getBytes());
-                out.flush();
+                // OutputStream out = socket.getOutputStream();
+                // out.write(strMessage.getBytes());
+                // out.flush();
             }
         }
         catch (IOException e)
@@ -147,10 +152,17 @@ class CPort extends Connection
     }
 
     @Override
-    public byte[] receive ()
+    public List<Byte> receive () throws IOException
     {
-        byte[] message = null;
-        return message;
+        try
+        {
+            return retrieveMessage(backServer.getInputStream());
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override

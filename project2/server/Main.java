@@ -1,4 +1,4 @@
-
+import java.util.List;
 
 class Main
 {   
@@ -192,6 +192,17 @@ class Main
         }
     }
 
+    public static String bytesToString (final List<Byte> bytes)
+    {
+        StringBuilder str = new StringBuilder();
+        for (Byte b : bytes)
+        {
+            str.append (b);
+        }
+
+        return str.toString();
+    }
+
     //DONE
     private static void printHelp ()
     {
@@ -199,6 +210,6 @@ class Main
         System.out.println ("-p <port range> - Use the same machine and use a range of ports to comunicate among them. port's range example: -p 3000-3010");
         System.out.println ("-i <ip range> - The servers are located in a LAN. Use a range of ips in order to comunicate with them. Ip range example: -i 192.168.1.1-254");
         System.out.println ("");
-        System.out.println ("DGit server");       
+        System.out.println ("DGit server");
     }
 }

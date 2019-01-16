@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 class CIP extends Connection
 {
 
@@ -19,9 +22,9 @@ class CIP extends Connection
     }
 
     @Override
-    public byte[] receive ()
+    public List<Byte> receive ()
     {
-        byte[] message = null;
-        return message;
+        ArrayList<Byte> msg = new ArrayList<>();
+        return msg;
     }
 }
