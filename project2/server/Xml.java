@@ -17,7 +17,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 public class Xml {
     private Document document;
-    String ruta="C:\\Users\\frank\\Documents\\proyecto\\proyecto.xml";
+    String ruta="..\\proyecto.xml";
     File file= new File (ruta);
     int longitud = 100;
     String [] listahash = new  String [longitud];
