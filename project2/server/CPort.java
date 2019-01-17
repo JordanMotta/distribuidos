@@ -117,6 +117,14 @@ class CPort extends Connection
                             new Random().nextInt()) % usedPorts.size ())));
 
                 System.out.println ("Joined to server " + port);
+
+                String msg = createMessageToJoin();
+
+                OutputStream out = frontServer.getOutputStream();
+                out.write (msg.getBytes());
+                out.flush ();
+
+                backServer = serverSocket.accept();
                 
                 // ArrayList<Byte> message = new ArrayList<>();
                 // message.add(new Byte(Server.JOIN));

@@ -10,7 +10,6 @@ abstract class Connection
 {
 
     public final static int CONNECT_TO = 100;
-    public final static byte SAVE_FILE = 50;
 
     protected Socket socket;
     protected ServerSocket serverSocket;
@@ -70,6 +69,14 @@ abstract class Connection
         {
 
         }
+    }
+
+    public String createMessageToJoin ()
+    {
+        String msg;
+        String port = String.valueOf(frontServer.getLocalPort());
+        msg = String.valueOf(Server.JOIN) + port.length() + port;
+        return msg;
     }
 
     public boolean isFirstConnection ()

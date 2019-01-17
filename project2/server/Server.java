@@ -12,10 +12,13 @@ class Server
     public final static byte MAIN_SERVER = 1;
     public final static byte SECONDARY_SERVER = 2;
     public final static byte JOIN = 120;
+    public final static byte SAVE_FILE = 50;
 
     private Connection conn;
     private Thread receiveMessageThread;
     private Thread acceptRequestTheard;
+
+    private BasedeDatos db = new BasedeDatos ();
 
     public Server ()
     {
@@ -54,8 +57,9 @@ class Server
                         while (in.available () == 0 );
 
                         List<Byte> msg = Connection.retrieveMessage (in);
-                        if (msg.get(0) == Connection.SAVE_FILE)
+                        if (msg.get(0) == SAVE_FILE)
                         {
+                            System.out.println ("Salvando un archivo");
                             saveFile (msg);
                         }
                     }
@@ -100,6 +104,14 @@ class Server
 
     private void saveFile (List<Byte> msg)
     {
+        int fileTitleLength = msg.get(1);
+        int fileLength = msg.get (2);
+        List<Byte> fileTitle = msg.subList(3, 3 + fileTitleLength);
+        int fileContentBase = 3 + fileTitleLength + 1;
+        List<Byte> fileContent = msg.subList(fileContentBase, fileContentBase + fileLength);
+        int commentBase = fileContentBase + fileLength + 1;
+        List<Byte> comment = msg.subList(commentBase, commentBase + msg.size());
+        // db.Creararchivo("Dios", nombre, archivo, texto)
 
     }
 
