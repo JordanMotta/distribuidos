@@ -73,7 +73,7 @@ class Persona extends Thread {
 
                 bytesRead = cadenaReceptor.read(mybytearray,0,mybytearray.length);
 
-                if(bytesRead == 1){   //1 valor que toma como mínimo un archivo Outputstream, significa archivo no encontrado o no buscado 
+                if(bytesRead == 1){   //1 valor que toma como minimo un archivo Outputstream, significa archivo no encontrado o no buscado 
                     System.out.println("Archivo no encontrado o comando erroneo");
                 } else if(bytesRead == -1){ System.out.println("Sesion finalizada"); } //-1 valor que toma al no recibir ningun archivo erroneo ni correcto, solo con BYE
 
@@ -114,7 +114,7 @@ class Persona extends Thread {
         }
     }
 }
-public class MainCliente {
+public class Client {
 
     public static void main(String[] args) {
         ArrayList<Thread> clients = new ArrayList<Thread>();
