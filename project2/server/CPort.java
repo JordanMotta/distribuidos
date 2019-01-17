@@ -38,7 +38,7 @@ class CPort extends Connection
         {
             System.out.println ("I am the first server!");
             firstConnection = true;
-            join (availablePorts.get(Math.abs(new Random().nextInt() % availablePorts.size())));
+            join (availablePorts.get(availablePorts.size() - 1));
         }
         else if (availablePorts.size() == 0) // There is no space for another server.
         {

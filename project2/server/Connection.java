@@ -79,6 +79,11 @@ abstract class Connection
         return msg;
     }
 
+    public void sendToBackServer (List<Byte> msg)
+    {
+
+    }
+
     public boolean isFirstConnection ()
     {
         return firstConnection;

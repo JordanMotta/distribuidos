@@ -12,6 +12,7 @@ class Server
     public final static byte MAIN_SERVER = 1;
     public final static byte SECONDARY_SERVER = 2;
     public final static byte JOIN = 120;
+    public final static byte JOIN_RING = 119;
     public final static byte SAVE_FILE = 50;
 
     private Connection conn;
@@ -61,6 +62,12 @@ class Server
                         {
                             System.out.println ("Salvando un archivo");
                             saveFile (msg);
+                            continue;
+                        }
+                        else if (msg.get(0) == JOIN)
+                        {
+                            System.out.println ("Un servidor se quiere unir");
+                            conn.sendToBackServer(msg);
                         }
                     }
                     catch (IOException e)
