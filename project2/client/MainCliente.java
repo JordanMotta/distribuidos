@@ -111,12 +111,12 @@ class MainCliente {
                         OutputStream os = sk.getOutputStream();
          
                         //Sending data to the server
-                        dos.write(50);
-                        dos.writeUTF(myFile.getName()); 
-                        dos.writeLong(myFile.getName().length());
-                        dos.writeLong(mybytearray.length);   
-                        dos.write(mybytearray, 0, mybytearray.length);
-                        dos.writeChars(comentario);
+                        dos.write(50); // envio identificador numero 50 
+                        dos.writeLong(myFile.getName().length()); //envio tamano del archivo
+                        dos.writeLong(mybytearray.length);   //envio longitud del archivo en bytes 
+                        dos.writeUTF(myFile.getName()); //envio nombre del archivo
+                        dos.write(mybytearray, 0, mybytearray.length); // envio el archivo completo desde el byte 0 hasta el final
+                        dos.writeChars(comentario); //envio comentario
                        
                         System.out.println("Client> Commit Accepted");
                         output.println(request);
