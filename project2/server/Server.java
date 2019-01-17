@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.lang.Runnable;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.io.InputStream;
@@ -111,15 +112,56 @@ class Server
 
     private void saveFile (List<Byte> msg)
     {
-        int fileTitleLength = msg.get(1);
-        int fileLength = msg.get (2);
-        List<Byte> fileTitle = msg.subList(3, 3 + fileTitleLength);
-        int fileContentBase = 3 + fileTitleLength + 1;
-        List<Byte> fileContent = msg.subList(fileContentBase, fileContentBase + fileLength);
-        int commentBase = fileContentBase + fileLength + 1;
-        List<Byte> comment = msg.subList(commentBase, commentBase + msg.size());
-        // db.Creararchivo("Dios", nombre, archivo, texto)
+        System.out.println ("msg length: " + msg.size());
 
+        System.out.println ("File Title length: " + msg.get(1).intValue());
+        int fileTitleLength = msg.get(1).intValue();
+
+        System.out.println ("File length: " + msg.get(2).intValue());
+        int fileLength = msg.get (2).intValue();
+        List<Byte> fileTitle = msg.subList(3, 3 + fileTitleLength);
+        int fileContentBase = 3 + fileTitleLength;
+        List<Byte> fileContent = msg.subList(fileContentBase, fileContentBase + fileLength);
+        // int commentBase = fileContentBase + fileLength + 1;
+        // List<Byte> comment = msg.subList(commentBase, commentBase + msg.size() - 1);
+        // String fileContentText = "";
+        // for (Byte fc : fileContent)
+        // {
+        //     fileContentText += fc.toString ();
+        // }
+        // System.out.println ("fileContent: " + fileContentText);
+
+        // String fileTitleText = "";
+
+        
+
+        // for (Byte fc : fileTitle)
+        // {
+        //     fileTitleText += fc.toString();
+        // }
+        // System.out.println ("fileTitle: " + fileTitleText);
+
+        byte[] fileTitlebytes = new byte[fileTitleLength];
+        for (int i = 0; i < fileTitleLength; ++i)
+        {
+            fileTitlebytes[i] = fileTitle.get(i);
+        }
+
+        String fileTitleText = new String (fileTitlebytes, StandardCharsets.UTF_8);
+        System.out.println ("fileTitle: " + fileTitleText);
+
+
+        byte[] fileBytes = new byte[fileLength];
+        for (int i = 0; i < fileLength; ++i)
+        {
+            fileBytes[i] = fileContent.get(i);
+        }
+
+        String fileContentText = new String (fileBytes, StandardCharsets.UTF_8);
+        System.out.println ("fileTitle: " + fileContentText);
+        
+
+        db.Creararchivo("Dios", "same", fileTitleText, fileContentText);
     }
 
     private void processMessage (final List<Byte> msg)

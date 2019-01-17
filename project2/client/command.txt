@@ -1,0 +1,1 @@
+dgit push [test.txt] -m '[..]'

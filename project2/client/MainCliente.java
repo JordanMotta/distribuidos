@@ -2,7 +2,7 @@
 //respectivos parametros
 //pull: dgit pull DONE
 //push: dgit push [archivos] -m '[comentario]'
-package cliente;
+// package cliente;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -94,7 +94,7 @@ class MainCliente {
                     {
                         try 
                         {
-                        String archivo = arreglo[4].replace("[","").replace("]","");
+                        String archivo = arreglo[2].replace("[","").replace("]","");
                         String comentario = arreglo[4].replace("[","").replace("]","").replace("'","");
                         //FileInputStream archivo2 = new FileInputStream(archivo);
                         
@@ -109,14 +109,16 @@ class MainCliente {
                         dis.readFully(mybytearray, 0, mybytearray.length);
          
                         OutputStream os = sk.getOutputStream();
+
+                        dos = new DataOutputStream(os);
          
                         //Sending data to the server
                         dos.write(50); // envio identificador numero 50 
-                        dos.writeLong(myFile.getName().length()); //envio tamano del archivo
-                        dos.writeLong(mybytearray.length);   //envio longitud del archivo en bytes 
-                        dos.writeUTF(myFile.getName()); //envio nombre del archivo
+                        dos.write(myFile.getName().length()); //envio tamano del archivo
+                        dos.write(mybytearray.length);   //envio longitud del archivo en bytes 
+                        dos.write(myFile.getName().getBytes("UTF-8")); //envio nombre del archivo
                         dos.write(mybytearray, 0, mybytearray.length); // envio el archivo completo desde el byte 0 hasta el final
-                        dos.writeChars(comentario); //envio comentario
+                        dos.write(comentario.getBytes("UTF-8")); //envio comentario
                        
                         System.out.println("Client> Commit Accepted");
                         output.println(request);

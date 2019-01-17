@@ -7,7 +7,7 @@ import java.util.Date;
  * @author frank
  */
 public class BasedeDatos {
-    String url = "..\\";
+    String url = ".\\";
     /* maestro = nombre de la persona que creo ese archivo 
        nombre = nombre que esta actualizando el archivo 
        archivo = nombre del archivo 
