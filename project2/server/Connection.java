@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.net.ServerSocket;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.List;
 
 abstract class Connection
 {
@@ -17,6 +19,7 @@ abstract class Connection
     protected Thread messagesListenerTheard;
     protected boolean firstConnection = false;
     protected Server server;
+    protected Socket client;
 
     /**
      * Ring model.
@@ -53,7 +56,7 @@ abstract class Connection
     abstract public void connect ();
 
     abstract public void send (final byte[] message);
-    abstract public byte[] receive ();
+    abstract public List<Byte> receive () throws IOException;
 
     public void close ()
     {
@@ -68,19 +71,54 @@ abstract class Connection
         }
     }
 
+    public String createMessageToJoin ()
+    {
+        String msg;
+        String port = String.valueOf(frontServer.getLocalPort());
+        msg = String.valueOf(Server.JOIN) + port.length() + port;
+        return msg;
+    }
+
     public boolean isFirstConnection ()
     {
         return firstConnection;
     }
 
-    public void acceptRequest () throws IOException
+    public Socket acceptRequest () throws IOException
     {
-        Socket anotherServer = serverSocket.accept ();
+        System.out.println ("Listening...");
+        Socket newConnection = serverSocket.accept ();
+        System.out.println ("A new connection");
 
-        //Wait until the server expose his reasons.
-        InputStream in = anotherServer.getInputStream();
-        while (in.available() == 0);
+        return newConnection;
+    }
 
+    private void newServerConnection (Socket newServer)
+    {
+        /**
+         * 
+         */
+        String message = 
+            String.valueOf(Server.JOIN) + 
+            String.valueOf(newServer.getLocalPort()).length() + 
+            String.valueOf(newServer.getLocalPort());
+
+        System.out.println ("Sending message: " + message);
+        
+        OutputStream out;
+
+        try 
+        {
+            out = backServer.getOutputStream();
+            out.write(message.getBytes());
+            out.flush();
+
+            backServer.close();
+            backServer = newServer;
+        } 
+        catch (Exception e) 
+        {
+        }
         
     }
 
@@ -92,6 +130,28 @@ abstract class Connection
     protected void runFirstServer ()
     {
         
+    }
+
+    public boolean isFrontMessageAvailable () throws IOException
+    {
+        return frontServer.getInputStream ().available () != 0;
+    }
+
+    public List<Byte> frontReceive () throws IOException
+    {
+        return retrieveMessage(frontServer.getInputStream());
+    }
+
+    protected static List<Byte> retrieveMessage (final InputStream in) throws IOException
+    {
+        ArrayList<Byte> msg = new ArrayList<>();
+        while (true)
+        {
+            int n = in.read ();
+            if (n == -1) break;
+            msg.add (new Byte((byte)n));
+        }
+        return msg;
     }
 
     protected void printConnection (final Socket s)
