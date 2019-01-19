@@ -5,10 +5,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 public class archivos {
+    // crea el fichero  en la direccion dada 
     public void CrearFichero(String carpeta){
         File folder = new File(carpeta);
         folder.mkdirs();
     }
+    // crea el archivo en un formato txt en la ruta que se le dio y el contenido   
     public void CrearArchivo(String ruta , String texto){
          ruta = ruta+".txt";
         File archivo = new File(ruta);
@@ -26,6 +28,7 @@ public class archivos {
             System.out.print("error en crear el archivo");
         }    
     }
+    // lee el archivo 
     public void LeerArchivo(String ruta ){
         try {
             String cadena;
