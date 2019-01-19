@@ -107,7 +107,7 @@ public final class XmlHash {
         Obtener();
         if (new File (this.ruta).exists()){
         int  numero = (int) (Math.random() * 96) ;
-        Indice_Arreglo =97%numero;
+        Indice_Arreglo = 97%numero == 0 ? 1 : 97 % numero;
         while (bo==false){
 
              for (int temp = 1; temp < contador ; temp ++) {

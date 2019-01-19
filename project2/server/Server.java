@@ -12,9 +12,9 @@ class Server
 {
     public final static byte MAIN_SERVER = 1;
     public final static byte SECONDARY_SERVER = 2;
-    public final static byte JOIN = 120;
-    public final static byte JOIN_RING = 119;
-    public final static byte SAVE_FILE = 50;
+    public final static byte JOIN = 120; // Un servidor se quiere conectar al hilo
+    public final static byte JOIN_RING = 119; // Un servidor se quiere conectar al hilo
+    public final static byte SAVE_FILE = 50; // Un cliente quiere guardar.
 
     private Connection conn;
     private Thread receiveMessageThread;
@@ -44,6 +44,10 @@ class Server
     }
 
     
+    /**
+     * Establece los hilos que van a aceptar nuevas solicitudes
+     * y de recibir mensajes de los sockets.
+     */
     public void run ()
     {
         acceptRequestTheard = new Thread(new Runnable(){
@@ -110,6 +114,9 @@ class Server
         receiveMessageThread.start ();
     }
 
+    /**
+     * Salva el archivo recibido por el cliente.
+     */
     private void saveFile (List<Byte> msg)
     {
         System.out.println ("msg length: " + msg.size());
@@ -122,24 +129,6 @@ class Server
         List<Byte> fileTitle = msg.subList(3, 3 + fileTitleLength);
         int fileContentBase = 3 + fileTitleLength;
         List<Byte> fileContent = msg.subList(fileContentBase, fileContentBase + fileLength);
-        // int commentBase = fileContentBase + fileLength + 1;
-        // List<Byte> comment = msg.subList(commentBase, commentBase + msg.size() - 1);
-        // String fileContentText = "";
-        // for (Byte fc : fileContent)
-        // {
-        //     fileContentText += fc.toString ();
-        // }
-        // System.out.println ("fileContent: " + fileContentText);
-
-        // String fileTitleText = "";
-
-        
-
-        // for (Byte fc : fileTitle)
-        // {
-        //     fileTitleText += fc.toString();
-        // }
-        // System.out.println ("fileTitle: " + fileTitleText);
 
         byte[] fileTitlebytes = new byte[fileTitleLength];
         for (int i = 0; i < fileTitleLength; ++i)
@@ -175,33 +164,12 @@ class Server
         }
     }
 
+    /**
+     * Al cerrar el servidor, se cierran todos los puertos.
+     */
     public void close ()
     {
         System.out.println ("Closing DGit server");
         conn.close ();
     }
-
-
-
-    // public static class State
-    // {
-    //     public State ()
-    //     {
-
-    //     }
-
-    //     public void process ()
-    //     {
-
-    //     }
-
-    //     private void join ()
-    //     {
-
-    //     }
-
-        
-    // }
-
-
 }

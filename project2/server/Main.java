@@ -13,6 +13,10 @@ class Main
 
     public final static String P_PARAM = "-p";
     public final static String I_PARAM = "-i";
+
+    /**
+     * Main verifica que se envian los parametros correctos y crea una instancia del servidor.
+     */
     public static void main(String[] args) 
     {
 
@@ -204,6 +208,9 @@ class Main
     }
 
     //DONE
+    /**
+     * Imprime los comandos disponibles en el servidor.
+     */
     private static void printHelp ()
     {
         System.out.println ("DGit Server commands");
