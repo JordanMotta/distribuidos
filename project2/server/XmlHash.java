@@ -16,6 +16,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
+
 public final class XmlHash {
        Document document;
        String ruta="\\Hash.xml";
@@ -23,7 +24,7 @@ public final class XmlHash {
        int longitud = 100;
        String [] listahash = new  String [longitud];
        int  contador =1 ; 
-       
+       // metodo que crear el archivo hash.xml y si en tal caso existe este toma la informacion de dicho archivo
     public XmlHash(String ruta){
        try {
           this.ruta = ruta+ this.ruta;
@@ -43,6 +44,9 @@ public final class XmlHash {
         } catch(Exception e){
             e.printStackTrace();}  
        } 
+           //formato de xml primero un codigo que seria el hash que se le asigno 
+    // el nombre del usuario 
+    // y la fecha del momento que se creo 
     public String Crear (  String vFecha,String vUsuario){
         if (contador <= longitud ){
             String Indice_Arreglo= funcion_hash();
@@ -71,6 +75,7 @@ public final class XmlHash {
         return "null";
         }
     }
+         // metodo que guarfa la informacion de archivo hash.xml
     private void generar_documento (){
         try {
                 TransformerFactory factory = TransformerFactory.newInstance();
@@ -85,6 +90,7 @@ public final class XmlHash {
             e.printStackTrace();
        }
     }
+           // busca en el archivo hash.xml si existe el elemento  expecificamente el nombre 
     public Node  Buscar(String Tag , String Elemento){
         Node resultado;
         resultado = null;
@@ -101,6 +107,7 @@ public final class XmlHash {
           return resultado;
           
     } 
+    // funcion hash que hace es asignar un hash unico 
     public String funcion_hash(){
   int Indice_Arreglo=0;
         Boolean bo=false;
@@ -132,6 +139,7 @@ public final class XmlHash {
         }
         return  Integer.toString(Indice_Arreglo) ;
     }
+     // obtiene todos los hash que se asignaron para que este no se repita 
     public void Obtener (){
       NodeList nodoRaiz = document.getDocumentElement().getElementsByTagName("Codigo");
         contador =0;
