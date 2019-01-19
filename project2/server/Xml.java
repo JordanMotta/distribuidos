@@ -22,6 +22,7 @@ public class Xml {
     int longitud = 100;
     String [] listahash = new  String [longitud];
     int  contador =1 ; 
+        // metodo que crear el archivo proyecto.xml y si en tal caso existe este toma la informacion de dicho archivo
     public Xml(){
        try {
 
@@ -42,22 +43,26 @@ public class Xml {
             e.printStackTrace();
        }
     }
+            //formato de xml primero un codigo que seria el hash que se le asigno 
+    // el nombre del archivo
+    // el maestro que  creo el archivo 
+    // y la fecha del momento que se creo 
     public String  Crear (String Nombre , String Fecha , String Maestro){
         if (contador <= longitud ){
         String Indice_Arreglo= funcion_hash();
         Element Hash =document.createElement("Hash");
-        Hash.setAttribute("codigo", Indice_Arreglo);// codigo cambiar 
+        Hash.setAttribute("codigo", Indice_Arreglo); 
  
         Element nombre_arc =document.createElement("archivo");
-        Text texto =document.createTextNode(Nombre);  // nombre archivo
+        Text texto =document.createTextNode(Nombre);  
         nombre_arc.appendChild(texto);
         
         Element maestro = document.createElement("Maestro");
-        texto =document.createTextNode(Maestro); // cambiar a fecha 
+        texto =document.createTextNode(Maestro); 
         maestro.appendChild(texto);
         
         Element fecha_cre = document.createElement("fecha");
-        texto =document.createTextNode(Fecha); // cambiar a fecha 
+        texto =document.createTextNode(Fecha); 
         fecha_cre.appendChild(texto);
         
         Hash.appendChild(maestro);       
@@ -74,6 +79,7 @@ public class Xml {
         return "null";
         }
     }
+            // metodo que guarda la informacion de archivo hash.xml
     public void generar_documento (){
         try {
                 TransformerFactory factory = TransformerFactory.newInstance();
@@ -104,6 +110,8 @@ public class Xml {
           }
           return resultado;
        }
+           // busca en el archivo proyecto.xml si existe el elemento  expecificamente el nombre del maestro o 
+    //el nombre del archivo
     public String Verificar (String Tag , String Elemento){
         String resultado ;
         Node nodo =Buscar (Tag,Elemento);
@@ -117,6 +125,8 @@ public class Xml {
         return resultado;
         
     }
+    
+        // funcion hash que hace es asignar un hash unico
     public String funcion_hash(){
         int Indice_Arreglo=0;
         Boolean bo=false;
@@ -146,6 +156,7 @@ public class Xml {
         }
         return  Integer.toString(Indice_Arreglo) ;
     }
+        // obtiene todos los hash que se asignaron para que este no se repita 
     public void Obtener (){
         
       NodeList nodoRaiz = document.getDocumentElement().getElementsByTagName("Hash");
